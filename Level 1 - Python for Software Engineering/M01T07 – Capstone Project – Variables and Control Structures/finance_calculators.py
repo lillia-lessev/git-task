@@ -18,7 +18,7 @@ or
 the amount that should be repaid on a loan each month.
 
 The formulas for both simple and compound interest are shown below for reference.
-
+The formula for bond calculation is also shown below.
 
 
 Simple Interest Formula:
@@ -35,6 +35,13 @@ n = number of times interst is compounded per time period
 
 Formulas from: CalculatorSoup (2023). 
 See full reference list at the end of the project.
+
+Bond repayment formula (FROM TASK PDF INSTRUCTIONS):
+
+repayment = (i * P) / (1 - ((1 + i))^(-n))
+i = interest rate PER MONTH (percentage)
+n = number of months
+P = Principle amount (present value of house)
     
 """
 
@@ -44,6 +51,7 @@ print("\n--------------------------------------------\n")
 
 # Declaring variables
 
+# INVESTMENT
 interest = ""
 principal_amount = 0.0
 accumulated_amount = 0.0
@@ -55,6 +63,12 @@ years = 0.0
 months = 0.0
 compounded = 0
 compounded_option = 0
+
+# BOND
+repayment = 0.0
+present_value = 0.0
+bond_interest_rate = 0.0
+bond_months = 0.0
 
 
 # Displaying instructional message to user and getting input for selcted option
@@ -74,6 +88,7 @@ while (option != "investment") and (option != "bond"):
     print("------------------------------------------------\n")
 
 else:
+    #-----------INVESTMENT------------------------
     if (option == "investment"):
         print("\n------------------------------------------------\n")
         print("INVESTMENT\n")
@@ -230,7 +245,7 @@ else:
             print(f'''The total amount of money earned at the end of your investment is valued at:\n
                   {accumulated_amount}''')
             accumulated_amount = round(accumulated_amount, 2) # rounding total amount to 2 decimal places
-            print(f'''The rounded amount is:\n
+            print(f'''\nThe rounded amount is:\n
                   {accumulated_amount}''')
             print("\n--------------------------------------------\n")
   
@@ -249,12 +264,52 @@ else:
     
     
     
-    # BOND   
+    #-----------BOND------------------------
     elif (option == "bond"):
         print("\n------------------------------------------------\n")
         print("BOND\n")
+        
+        # PRESENT VALUE
+        print("\nPlease enter the present value of the house and press ENTER. \nType the number ONLY.")
+        present_value = float(input("Present Value: "))
+        print("------------------------------------------------\n")
+        
+         # INTEREST RATE
+        print('''\nPlease enter the MONTHLY interest rate (interest rate PER MONTH) below.\n
+              Please ONLY type the NUMBER for your interest rate percentage.\n
+              Do NOT type the percentage symbol.''')
+        bond_interest_rate = float(input("\nInterest Rate Per Month (%): "))
+        bond_interest_rate = bond_interest_rate / 100 # Converting rate to percentage 
+        print("------------------------------------------------\n")
+        
+        # NO. OF MONTHS
+        print('''\nPlease enter the total number of MONTHS over which the bond will be repaid and press ENTER. Type the number only.\nIf it is NOT a WHOLE number of months, then please type your total number of months as a DECIMAL number.\n
+              e.g. 1 1/2 Months should be typed as "1.5" etc.\n''')
+        bond_months = float(input("Total number of MONTHS: "))
+        print("------------------------------------------------\n")
+        
+        # CALCULATING AND DISPLAYING RESULTS
+        print("\nBOND REPAYMENT CALCULATION\n\n")
+        
+        print(f'''Monthly repayment = (i * P) / (1 - ((1 + i))^(-n))\n\n
+              i = {bond_interest_rate}\n 
+              n = {bond_months}\n 
+              P = {present_value} (present value of house)\n''')
+        
+        repayment = (bond_interest_rate * present_value) / (1 - (((1 + bond_interest_rate))**(0-bond_months)))
+
+        print(f'''The total amount of money that needs to be repaid each month is valued at:\n
+                  {repayment}''')
+        repayment = round(repayment, 2) # rounding total amount to 2 decimal places
+        print(f'''\nThe rounded amount is:\n
+                  {repayment}''')
+        print("\n--------------------------------------------\n")
 
 
+
+        # EXITING MESSAGE
+        print("\n\n Thank you for using my finance calculator!\n")
+        print("\n--------------------------------------------\n")
 
 
     else:
