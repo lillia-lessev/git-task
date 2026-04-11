@@ -169,7 +169,7 @@ else:
                   Please enter a WHOLE number for the number of YEARS.\n''')
             time_period_years = float(input("Total Number of YEARS: "))
             
-            time_period_years = time_period.trunc() # Truncating the number of years to a whole number in case user types in a decimal
+            time_period_years = math.trunc(time_period) # Truncating the number of years to a whole number in case user types in a decimal
             print('''\nNow please enter the total number of MONTHS for your investment and press ENTER. Type the number only.\nIf it is not a WHOLE number of months, then please type your total number of months as a DECIMAL number.\n
                   e.g. 1 1/2 Months should be typed as "1.5" etc.\n''')
             time_period_months = float(input("Total number of MONTHS: "))
@@ -219,7 +219,7 @@ else:
                   P = {principal_amount}\n
                   i = {interest_rate}\n
                   t = {time_period}\n 
-                  n =  (number times interest is compounded per year)''')
+                  n = {compounded}''')
             
             # Choosing if interest is compounded monthly or annually
             print('''\n\nIs the interest compounded ANNUALLY or MONTHLY?\n
