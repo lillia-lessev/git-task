@@ -2,7 +2,7 @@
 ----------------------------------------------
 
 Lillia Lessev
-    
+
 Capstone Project
 
 ----------------------------------------------
@@ -30,10 +30,10 @@ A = P(1 + (i/n))^nt
 A = total accured amount
 P = principal amount
 i = interest rate (percentage) PER time period
-t = time period 
+t = time period
 n = number of times interst is compounded per time period
 
-Formulas from: CalculatorSoup (2023). 
+Formulas from: CalculatorSoup (2023).
 See full reference list at the end of the project.
 
 Bond repayment formula (FROM TASK PDF INSTRUCTIONS):
@@ -42,7 +42,7 @@ repayment = (i * P) / (1 - ((1 + i))^(-n))
 i = interest rate PER MONTH (percentage)
 n = number of months
 P = Principle amount (present value of house)
-    
+
 """
 
 import math
