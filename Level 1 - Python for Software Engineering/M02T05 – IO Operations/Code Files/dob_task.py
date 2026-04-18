@@ -16,7 +16,9 @@ names = []
 bdays = []
 line_parts = []
 
-with open("Level 1 - Python for Software Engineering\M02T05 – IO Operations\Code Files\Input\Task file\DOB.txt", "r") as file:
+#with open("Level 1 - Python for Software Engineering\M02T05 – IO Operations\Code Files\Input\Task file\DOB.txt", "r") as file:
+with open(".\Input\Task file\DOB.txt", "r", encoding="utf-8") as file:
+
     for line in file:
         line_parts = line.strip().split()       # removes leading and trailing whitespace, spaces, tabs and '\n' from each line
                                                 # also splits string / line by spaces / whitespaces
