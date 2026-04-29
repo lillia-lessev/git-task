@@ -12,28 +12,20 @@ STACK TRACE
 
 # Function to print dictionary values given the keys
 def print_values_of(dictionary, keys):
-    # for keys in dictionary:                       # changed keys to dictionary and changed key to keys
-    #     print(dictionary[keys])                   # changed [k] to [keys]
-    #commented out for loop and wrote print statement below instead
-    print(dictionary[keys])
+    for key in keys:
+        print(dictionary[key]) # changed k to key
 
 # Print dictionary values from simpson_catch_phrases
 simpson_catch_phrases = {"lisa": "BAAAAAART!", 
                          "bart": "Eat My Shorts!", 
                          "marge": "Mmm~mmmmm", 
-                         "homer": "d'oh!",          #changed '' to "" 
+                         "homer": "d'oh!", # changed '' to ""
                          "maggie": "(Pacifier Suck)"
                          }
 
-
-#print_values_of(simpson_catch_phrases, 'lisa', 'bart', 'homer') 
-#replaced above commented-out line with lines below
 print()
-print_values_of(simpson_catch_phrases, "lisa")
-print_values_of(simpson_catch_phrases, "homer")
-print_values_of(simpson_catch_phrases, "bart")
+print_values_of(simpson_catch_phrases, ['lisa', 'bart', 'homer'])
 print()
-
 
 '''
     Expected console output:
