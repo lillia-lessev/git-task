@@ -1,0 +1,16 @@
+# Parent class 
+class Father():
+    def transport(self):
+        print("The transport used is a car")
+        
+# Subclass 
+class Son(Father):
+    def transport(self):
+        print("The transport used is a bicycle")
+
+
+son_1 = Son() 
+son_1.transport() # This will output "The transport used is a bicycle" because the inherited method is overwritten by Son subclass
+
+
+
