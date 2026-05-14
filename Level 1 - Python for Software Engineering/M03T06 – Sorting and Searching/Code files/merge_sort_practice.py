@@ -61,7 +61,7 @@ def merge(items, sections, temporary_storage):
         if left_index < first_section_end and right_index < second_section_end:
             
             # Compare elements from both sections
-            if len(items[left_index]) < len(items[right_index]):
+            if items[left_index] < items[right_index]:
                 
                 # Place the smaller element into temporary storage 
                 temporary_storage[temp_index] = items[left_index] 
@@ -92,34 +92,10 @@ def merge(items, sections, temporary_storage):
     for i in range(temp_index):
         items[first_section_start + i] = temporary_storage[i]
 
-def display_list(my_list):
-    for i in range(len(my_list)):
-        print(my_list[i] + "\n")
 
-# String list sorting: 
-str1 = "This is my first string."
-str2 = "meow"
-str3 = "Short string."
-str4 = "This is a slightly longerrrrrrrr string."
-str5 = """This is a much longer string. It is much longer than all the others.\nIt has line breaks, unlike the other strings."""
-str6 = "Keep it short and sweet."
-str7 = "Hello World!"
-str8 = "Blah blah blah"
-str9 = "Knock Knock"
-str10 = "What day of the week is it?"
-
-string_list1 = [str1, str2, str3, str4, str5, str6, str7, str8, str9, str10] 
-string_list2 = ["Hi", "there", "everybody", "how", "hello", "dogs and cats", "go", "cinema", "popcorn and smarties", "random stuff"]
-string_list3 = ["This", "is", "another", "list", "of", "random", "strings", "and", "words", "yayy"]
-
-sorted_list1 = merge_sort(string_list1) 
-sorted_list2 = merge_sort(string_list2)
-sorted_list3 = merge_sort(string_list3)
-
-
-display_list(sorted_list1)
-display_list(sorted_list2)
-display_list(sorted_list3)
-
+# Example usage: 
+example_list = [4, 3, 2, 8, 7, 5, 1] 
+sorted_list = merge_sort(example_list) 
+print(sorted_list)
 
 print("\n--------------------------------------------------------\n")
