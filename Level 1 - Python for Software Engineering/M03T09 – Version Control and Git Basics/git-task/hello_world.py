@@ -3,8 +3,7 @@
 
 Lillia Lessev
 
-IO Operations
-
+Version Control and Git Basics
 
 ----------------------------------------------
 

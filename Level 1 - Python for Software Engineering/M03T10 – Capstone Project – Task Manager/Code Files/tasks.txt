@@ -1,2 +1,5 @@
 admin, Register Users with task_manager.py, Use task_manager.py to add the usernames and passwords for all team members that will be using this program., 10 Oct 2019, 20 Oct 2019, No
 admin, Assign initial tasks, Use task_manager.py to assign each team member with appropriate tasks, 10 Oct 2019, 25 Oct 2019, No
+lillia, Code task manager, Complete relevant code so task_manager.py runs properly, 03 Apr 2026, 15 Aug 2026, No
+lillia, Research, Research how to manage tasks, 22 May 2026, 15 Jul 2026, No
+bob, Get coffee, Get coffee for all team members, 07 Jan 2023, 07 Jan 2023, No
