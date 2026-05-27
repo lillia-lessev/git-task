@@ -54,6 +54,43 @@ class Task:
         self.due_date = due_date
         self.completed = completed
     
+    def __str__(self):
+        """
+        Returns a string representation of a Task object.
+
+        Returns:
+            str: A string representation of a Task object in the format of a table
+        """
+        
+        table_data = []
+        
+        user = self.username
+        
+        title = self.title
+        title = textwrap.wrap(title, width=20)
+        title_str = ""
+        for wrap in range(len(title)):
+            title_str = title_str + title[wrap] + "\n"
+        
+        description = self.description
+        description = textwrap.wrap(description, width=20)
+        desc_str = ""
+        for wraps in range(len(description)):
+            desc_str = desc_str + description[wraps] + "\n"
+            wraps += 1
+        
+        date_assigned = self.date_assigned
+        due_date = self.due_date
+        completed = self.completed
+        
+        table_data.append([user, title_str, desc_str, date_assigned, due_date, completed])
+        table_headers = ["Task\nno.", "Username of user\nassigned to task", "Task Title", "Task Description", "Date Assigned", "Due Date", "Has task been\nCompleted?"]
+        table = tabulate(table_data, headers=table_headers, tablefmt="grid", maxcolwidths=[None, 10])
+        
+        return table
+        
+        
+    
     def get_user(self):
         """
         Returns the user assigned to a task
@@ -191,7 +228,80 @@ def read_tasks():
         print("Error reading existing users from file.")
     
     return tasks_list
+
+def view_all_tasks():
+    """
+    Displays all tasks, for all users in the task.txt text file and displays them in the format of a table.
+    """
     
+    task_list = []
+    task_list = read_tasks()
+    table_data = []
+    
+    
+    for task in range(len(task_list)):
+        # Username, Title, Description, Date_assigned, Due_date, Completed
+        task_object = task_list[task]
+        user = task_object.get_user()
+        
+        title = task_object.get_title()
+        title = textwrap.wrap(title, width=20)
+        title_str = ""
+        for wrap in range(len(title)):
+            title_str = title_str + title[wrap] + "\n"
+        
+        
+        description = task_object.get_description()
+        description = textwrap.wrap(description, width=20)
+        desc_str = ""
+        for wraps in range(len(description)):
+            desc_str = desc_str + description[wraps] + "\n"
+            wraps += 1
+        
+        date_assigned = task_object.get_date_assigned()
+        due_date = task_object.get_due_date()
+        completed = task_object.get_completed()
+        
+        table_data.append([(task + 1), user, title_str, desc_str, date_assigned, due_date, completed])
+        task +=1
+    
+    
+    table_headers = ["Task\nno.", "Username of user\nassigned to task", "Task Title", "Task Description", "Date Assigned", "Due Date", "Has task been\nCompleted?"]
+    table = tabulate(table_data, headers=table_headers, tablefmt="grid", maxcolwidths=[None, 10])
+    print("\n------ ALL TASK DETAILS ------\n")
+    print(table)
+        
+def del_task(task_no):
+    """
+    Deletes selected task from tasks.txt
+    """
+    
+    num = 0
+    lines = []
+    
+    try:
+        with open("tasks.txt", "r", encoding="utf-8") as file:
+            for line in file:
+                if num == task_no:
+                    pass
+                elif num != task_no:
+                    details = line
+                    lines.append(details)
+                num += 1
+    except FileNotFoundError:
+        print("Error reading existing tasks from file.")
+        
+    try:
+        with open("tasks.txt", "w", encoding="utf-8") as file:
+            file.seek(0,0)
+            for j in range(len(lines)):
+                file.write(lines[j])
+                j += 1
+                
+    except FileNotFoundError:
+        print("Error writing updated task list to file.")
+    
+
 # ==== Login Section ====
 def login():
     """
@@ -269,15 +379,25 @@ while login_successful == True:
     print("MENU")
     print("\n--------------------------------------------------------\n")
 
-    menu = input('''Select one of the following options and type ONLY the letter(s):\n
-        r - register a user
-        a - add task
-        va - view all tasks
-        vm - view my tasks
-        e - exit\nOption: ''').lower()
+    if user_logged_in == "admin":
+        menu = input('''Select one of the following options and type ONLY the letter(s):\n
+            r - register a user
+            a - add task
+            va - view all tasks
+            vm - view my tasks
+            vc - view completed tasks
+            del - delete tasks
+            e - exit\nOption: ''').lower()
+    
+    elif user_logged_in != "admin":
+        menu = input('''Select one of the following options and type ONLY the letter(s):\n
+            a - add task
+            va - view all tasks
+            vm - view my tasks
+            e - exit\nOption: ''').lower()
 
-    # REGISTERING NEW USER
-    if menu == 'r':
+    # REGISTERING NEW USER - option for admin only
+    if (menu == 'r') and (user_logged_in == "admin"):
 
         user_already_exists = True
         pass_match = False
@@ -421,45 +541,11 @@ while login_successful == True:
         except FileNotFoundError:
             print("Error writing new task to file.")
 
+    # VIEWING ALL TASKS
     elif menu == 'va':
+        view_all_tasks()
 
-        task_list = []
-        task_list = read_tasks()
-        table_data = []
-        
-        
-        for task in range(len(task_list)):
-            # Username, Title, Description, Date_assigned, Due_date, Completed
-            task_object = task_list[task]
-            user = task_object.get_user()
-            
-            title = task_object.get_title()
-            title = textwrap.wrap(title, width=20)
-            title_str = ""
-            for wrap in range(len(title)):
-                title_str = title_str + title[wrap] + "\n"
-            
-            
-            description = task_object.get_description()
-            description = textwrap.wrap(description, width=20)
-            desc_str = ""
-            for wraps in range(len(description)):
-                desc_str = desc_str + description[wraps] + "\n"
-                wraps += 1
-            
-            date_assigned = task_object.get_date_assigned()
-            due_date = task_object.get_due_date()
-            completed = task_object.get_completed()
-            
-            table_data.append([(task + 1), user, title_str, desc_str, date_assigned, due_date, completed])
-            task +=1
-        
-        
-        table_headers = ["Task\nno.", "Username of user\nassigned to task", "Task Title", "Task Description", "Date Assigned", "Due Date", "Has task been\nCompleted?"]
-        table = tabulate(table_data, headers=table_headers, tablefmt="grid", maxcolwidths=[None, 10])
-        print("\n------ ALL TASK DETAILS ------\n")
-        print(table)
-
+    # VIEWING MY TASKS
     elif menu == 'vm':
     
         task_list = []
@@ -503,6 +589,61 @@ while login_successful == True:
             print("\n------ MY TASK DETAILS ------\n")
             print(table)
 
+    # VIEW COMPLETED TASKS - option for admin user only
+    elif (menu == 'vc') and (user_logged_in == "admin"):
+        pass
+    
+    # DELETE TASKS - option for admin user only
+    elif (menu == 'del') and (user_logged_in == "admin"):
+
+        deleting_task = True
+        while deleting_task == True:
+            view_all_tasks()
+            task_list = []
+            task_list = read_tasks()
+            valid_option = False
+            is_int = False
+
+            while is_int == False:
+                print("\nAll tasks currently being stored have been displayed in the table above.")
+                print("Please type the 'Task no.' of the task you'd like to delete (NUMBER ONLY).")
+                try:
+                    task_no = input("Task number: ")
+                    task_no = int(task_no)
+                    if isinstance(task_no, int):
+                        is_int = True
+                    elif not isinstance(task_no, int):
+                        is_int = False
+                except ValueError:
+                    print("Error. Please enter the task NUMBER ONLY as an integer and press ENTER.")
+            
+            while valid_option == False:
+                if (task_no > len(task_list)) or task_no < 1:
+                    print("Error. Please enter a valid task number.")
+                    break
+                elif (task_no <= len(task_list) and task_no > 0):
+                    task_no = task_no - 1
+                    task = task_list[task_no]
+                    print(str(task))
+                    print("Are you sure you want to delete this task?.")
+                    option = input("y/n: ").lower()
+                    if option == "y":
+                        del_task(task_no)
+                        print("Task deleted.")
+                        deleting_task = False
+                        valid_option = True
+                        break
+                    elif option == "n":
+                        print("Task has NOT been deleted.")
+                        deleting_task = False
+                        valid_option = True
+                        break
+                else:
+                    print("Error. Invalid input.")
+                    break
+            
+        
+    # EXIT PROGRAM
     elif menu == 'e':
         print("\nGoodbye!\n")
         login_successful == False
