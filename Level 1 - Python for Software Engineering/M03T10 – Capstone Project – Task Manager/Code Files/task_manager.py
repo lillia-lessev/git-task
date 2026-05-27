@@ -560,14 +560,30 @@ def edit_task(selected_task, edit_option):
     task_list = []
     task_list = read_tasks()
     
-    # EDIT USER
     if edit_option == 1:
+        edit_user = True
+        edit_due_date = False
+    elif edit_option == 2:
+        edit_user = False
+        edit_due_date = True
+    elif edit_option == 3:
+        edit_user = True
+        edit_due_date = True
+    
+    # EDIT USER
+    if edit_user == True:
+        i = 0 
         for i in range(len(task_list)):
             task_in_list = task_list[i]
+            task_in_list_str = str(task_in_list)
+            
             user_task = selected_task
-            if task_in_list == user_task:
+            user_task_str = str(user_task)
+            
+            if task_in_list_str == user_task_str:
                 # Edit task
                 # Username, Title, Description, Date_assigned, Due_date, Completed
+                task_no = i
                 user_exists = False
                 while user_exists == False:
                     print("--- Editing username ---")
@@ -575,32 +591,154 @@ def edit_task(selected_task, edit_option):
                     user_exists = check_user_exists(username)
                     if user_exists == False:
                         print("Error. User does not exist. Please choose an existing username.")
+                    elif user_exists == True:
+                        title = task_in_list.get_title()
+                        description = task_in_list.get_description()
+                        date_assigned = task_in_list.get_date_assigned()
+                        due_date = task_in_list.get_due_date()
+                        completed = task_in_list.get_completed()
+                        edited_task = Task(username, title, description, date_assigned, due_date, completed)
+                        task_list[i] = edited_task
+
+                        if edit_option == 3:
+                            user_task = edited_task
             else:
                 pass
+            
+            i += 1
+    
+    
+        
     
     # EDIT DUE DATE
-    elif edit_option == 2:
+    if edit_due_date == True:
+        print("--- Editing Due Date ---")
+        i = 0
         for i in range(len(task_list)):
             task_in_list = task_list[i]
-            user_task = selected_task
-            if task_in_list == user_task:
+            task_in_list_str = str(task_in_list)
+            
+            if edit_option == 3:
+                user_task = edited_task
+            else:
+                user_task = selected_task
+            
+            user_task_str = str(user_task)
+            
+            if task_in_list_str == user_task_str:
                 # Edit task
                 # Username, Title, Description, Date_assigned, Due_date, Completed
-                print()
+                # user_task = selected_task
+                date_assigned = task_in_list.get_date_assigned()
+                split_date = date_assigned.split(" ")
+                day = split_date[0]
+                day = int(day)
+                month = split_date[1]
+                try:
+                    month = datetime.strptime(month, "%b")
+                    month = month.strftime("%m")
+                    month = int(month)
+                except:
+                    print("Error getting month.")
+                year = split_date[2]
+                year = int(year)
+                
+                # try:
+                #     due_date = datetime.strptime(due_date, "%d-%m-%Y")
+                #     due_date = due_date.strftime("%d %b %Y")
+                # except:
+                #     print("Error changing due date.")
+                
+                # Validate due date
+                valid_due_date = False
+                while (valid_due_date == False):
+                    try:
+                        print("Please enter the due date of the task in the following format dd-mm-yyyy\ne.g. 31-12-2024")
+                        due_date = input("Enter due date (dd-mm-yyy): ")
+                        due_date_split = due_date.split('-')
+                        due_day = int(due_date_split[0])
+                        due_month = int(due_date_split[1])
+                        due_year = int(due_date_split[2])
+                        
+                        if due_year < year: # Invalid year
+                            valid_due_date = False
+                            print("Error. Due date must be after assignment date.")
+                        elif due_year == year: # Valid year
+                
+                            if due_month < month: # Invalid due month
+                                valid_due_date = False
+                                print("Error. Due date month cannot be before the month of assignment.")
+                            elif due_month == month: # Same month
+                                if due_day < day: # invalid day - due date before assignent
+                                    valid_due_date = False
+                                    print("Error. Due date day cannot be before day of assignment.")
+                                elif due_day >= day: # valid day
+                                    valid_due_date = True
+                            elif due_month > month: # Valid month
+                                valid_due_date = True
+                        elif due_year > year: # Valid year
+                            valid_due_date = True
+
+                    except:
+                        print("Invalid due date entered. Please try again.")
+                        valid_due_date = False
+                
+                due_date = datetime.strptime(due_date, "%d-%m-%Y")
+                due_date = due_date.strftime("%d %b %Y")
+                
+                username = task_in_list.get_user()
+                title = task_in_list.get_title()
+                description = task_in_list.get_description()
+                date_assigned = task_in_list.get_date_assigned()
+                # due_date = task_in_list.get_due_date()
+                completed = task_in_list.get_completed()
+                edited_task = Task(username, title, description, date_assigned, due_date, completed)
+                task_list[i] = edited_task
+            
             else:
                 pass
+            
+            i += 1
     
-    # EDIT BOTH
-    elif edit_option == 3:
-        for i in range(len(task_list)):
-            task_in_list = task_list[i]
-            user_task = selected_task
-            if task_in_list == user_task:
-                # Edit task
-                # Username, Title, Description, Date_assigned, Due_date, Completed
-                print()
-            else:
-                pass
+    # Adding edits to text file
+        
+    try:
+        with open("tasks.txt", "w+", encoding="utf-8") as file:
+            file.seek(0,0)
+            
+            for j in range(len(task_list)):
+                if j == (len(task_list) - 1):
+                    current_task = task_list[j]
+                    user = current_task.get_user()
+                    title = current_task.get_title()
+                    description = current_task.get_description()
+                    date_assigned = current_task.get_date_assigned()
+                    due_date = current_task.get_due_date()
+                    completed = current_task.get_completed()
+                    completed = completed.strip("\n")
+                    
+                    task_details_str = str(f"{user}, {title}, {description}, {date_assigned}, {due_date}, {completed}")
+                
+                    file.write(task_details_str)
+                    
+                else:
+                    # Username, Title, Description, Date_assigned, Due_date, Completed
+                    current_task = task_list[j]
+                    user = current_task.get_user()
+                    title = current_task.get_title()
+                    description = current_task.get_description()
+                    date_assigned = current_task.get_date_assigned()
+                    due_date = current_task.get_due_date()
+                    completed = current_task.get_completed()
+                    
+                    task_details_str = str(f"{user}, {title}, {description}, {date_assigned}, {due_date}, {completed}\n")
+                    
+                    file.write(task_details_str)
+                
+                j += 1
+                
+    except FileNotFoundError:
+        print("Error writing updated task list to file.")    
     
     
 
@@ -717,26 +855,29 @@ while login_successful == True:
         if (len(my_tasks) - 1) >= 0:
             
             
-            is_int = False
+            
             valid_option = False
 
-            while is_int == False:
-                print("\nSelect a task to edit it by typing the task number ONLY and press ENTER.")
-                print("Type   -1   to go back to the main menu.")
-                print("Please note: You cannot edit tasks which have already been completed.")
-                print("\nPlease enter either a task number or  -1.")
-                
-                try:
-                    option = input("Input: ")
-                    option = int(option)
-                    if isinstance(option, int):
-                        is_int = True
-                    elif not isinstance(option, int):
-                        is_int = False
-                except ValueError:
-                    print("Error. Please enter a NUMBER ONLY and press ENTER.")
+
             
             while valid_option == False:
+                is_int = False
+                while is_int == False:
+                    print("\nSelect a task to edit it by typing the task number ONLY and press ENTER.")
+                    print("Type   -1   to go back to the main menu.")
+                    print("Please note: You cannot edit tasks which have already been completed.")
+                    print("\nPlease enter either a task number or  -1.")
+                    
+                    try:
+                        option = input("Input: ")
+                        option = int(option)
+                        if isinstance(option, int):
+                            is_int = True
+                        elif not isinstance(option, int):
+                            is_int = False
+                    except ValueError:
+                        print("Error. Please enter a NUMBER ONLY and press ENTER.")
+                
                 if option == -1:
                     valid_option = True
                     break
@@ -748,7 +889,7 @@ while login_successful == True:
                     if completed == "No":
                         is_int = False
                         valid_edit_option = False
-                        while is_int == False and valid_edit_option == False:
+                        while is_int == False or valid_edit_option == False:
                             print('''Please select the detail you'd like to edit and type the option NUMBER ONLY:\n
                             1 - Edit user
                             2 - Edit due date
@@ -759,35 +900,43 @@ while login_successful == True:
                                 edit_option = int(edit_option)
                                 if isinstance(edit_option, int):
                                     is_int = True
+                                    # EDIT USER
+                                    if edit_option == 1:
+                                        edit_task(selected_task, 1)
+                                        print("User edited.")
+                                        valid_edit_option = True
+                                    
+                                    # EDIT DUE DATE
+                                    elif edit_option == 2:
+                                        edit_task(selected_task, 2)
+                                        print("Due date edited.")
+                                        valid_edit_option = True
+                                    
+                                    # EDIT BOTH
+                                    elif edit_option == 3:
+                                        edit_task(selected_task, 3)
+                                        print("User and due date edited.")
+                                        valid_edit_option = True
+
+                                    else:
+                                        print("Invalid option.")
+                                        valid_edit_option = False
+                                
                                 elif not isinstance(edit_option, int):
                                     is_int = False
                             except ValueError:
                                 print("Error. Please choose an option from the list. Enter a NUMBER ONLY and press ENTER.")
 
-                            # EDIT USER
-                            if edit_option == 1:
-                                edit_task(selected_task, 1)
-                                valid_edit_option = True
                             
-                            # EDIT DUE DATE
-                            elif edit_option == 2:
-                                edit_task(selected_task, 2)
-                                valid_edit_option = True
-                            
-                            # EDIT BOTH
-                            elif edit_option == 3:
-                                edit_task(selected_task, 3)
-                                valid_edit_option = True
-                            
-                            else:
-                                print("Invalid option.")
-                                valid_edit_option = False
                         
                         
                         valid_option = True
                     elif completed == "Yes":
                         valid_option = False
                         print("You cannot edit a task that's already been completed.")
+                    else:
+                        print("Error. Invalid option selected.")
+                        break
                         
                     
             
