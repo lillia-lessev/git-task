@@ -15,6 +15,10 @@ Capstone Project: Task Manager
 # ===== Importing external modules ===========
 '''This is the section where you will import modules'''
 from datetime import datetime
+from tabulate import tabulate
+from textwrap import wrap
+import textwrap
+
 
 # ==== Classes === 
 class Task:
@@ -58,6 +62,42 @@ class Task:
             (str): username of user assigned to the task
         """
         return self.username
+    
+    def get_title(self):
+        """
+        Returns the title of a task
+
+        Returns:
+            (str): title of the task
+        """
+        return self.title
+    
+    def get_description(self):
+        """
+        Returns the description of a task
+
+        Returns:
+            (str): description of the task
+        """
+        return self.description
+    
+    def get_date_assigned(self):
+        """
+        Returns the date a task as assigned
+
+        Returns:
+            (str): the assignment date of the task
+        """
+        return self.date_assigned
+    
+    def get_due_date(self):
+        """
+        Returns the due date a task 
+
+        Returns:
+            (str): the due date of the task
+        """
+        return self.due_date
     
     def get_completed(self):
         """
@@ -135,7 +175,7 @@ def read_tasks():
         with open("tasks.txt", "r", encoding="utf-8") as file:
             for line in file:
                 details = line
-                split_details = details.split(", ").strip('\n') # username, password
+                split_details = details.split(", ") 
                 
                 # Username, Title, Description, Date_assigned, Due_date, Completed
                 user = split_details[0]
@@ -143,7 +183,7 @@ def read_tasks():
                 description = split_details[2]
                 date_assigned = split_details[3]
                 due_date = split_details[4]
-                completed = split_details[5]
+                completed = split_details[5].strip('\n')
 
                 current_task = Task(user, title, description, date_assigned, due_date, completed)
                 tasks_list.append(current_task)
@@ -153,15 +193,9 @@ def read_tasks():
     return tasks_list
     
 # ==== Login Section ====
-'''Here you will write code that will allow a user to login.
-    - Your code must read usernames and passwords from the user.txt file
-    - You can use a list or dictionary to store a list of usernames and
-       passwords from the file.
-    - Use a while loop to validate your user name and password.
-'''
 def login():
     """
-    Allows user to login by checking whehter the correct username and password has been entered.
+    Allows user to login by checking whether the correct username and password has been entered.
     
     Returns:
         bool: True or False value to check whether or not the login was successful
@@ -197,7 +231,7 @@ def login():
             if username_list[i] == current_username:
                 # Username match found
                 user_match = True
-                
+
                 if password_list[i] == current_password:
                     # Password match found
                     password_match = True
@@ -209,6 +243,7 @@ def login():
                     print("The password entered is incorrect.")
                     password_match = False
                     success_login = False
+                    break
                 
             else:
                 user_match = False
@@ -217,11 +252,14 @@ def login():
             # No matching username found
             print("Invalid user - user does not exist.")
             success_login = False
-    return success_login
+    login_details = [success_login, current_username]
+    return login_details
 
 
 # Calling up login view    
-login_successful = login()
+login_details = login()
+login_successful = login_details[0]
+user_logged_in = login_details[1]
 
 # Bringing up menu if login was sucessful
 while login_successful == True:
@@ -231,27 +269,15 @@ while login_successful == True:
     print("MENU")
     print("\n--------------------------------------------------------\n")
 
-    menu = input(
-        '''Select one of the following options and type ONLY the letter(s):\n
-    r - register a user
-    a - add task
-    va - view all tasks
-    vm - view my tasks
-    e - exit
-\nOption: '''
-    ).lower()
+    menu = input('''Select one of the following options and type ONLY the letter(s):\n
+        r - register a user
+        a - add task
+        va - view all tasks
+        vm - view my tasks
+        e - exit\nOption: ''').lower()
 
     # REGISTERING NEW USER
     if menu == 'r':
-        # TODO: Implement the following functionality
-        '''This code block will add a new user to the user.txt file
-        - You can use the following steps:
-            - Request input of a new username
-            - Request input of a new password
-            - Request input of password confirmation.
-            - Check if the new password and confirmed password are the same
-            - If they are the same, add them to the user.txt file,
-              otherwise present a relevant message'''
 
         user_already_exists = True
         pass_match = False
@@ -267,29 +293,6 @@ while login_successful == True:
             new_username = input("Enter username: ")
             user_already_exists = check_user_exists(new_username)
             
-            # if user_already_exists == True:
-            #     # Username already exists
-            #     print("This username already exists. Please try a different one.")
-            # elif user_already_exists == False:
-            #     # No matching username found
-            #     pass
-                
-                
-            
-            # Check if username exists
-            # for i in range(len(user_dict)):
-            #     usernames = list(user_dict.keys())
-            #     current_user = usernames[i]
-
-            #     if current_user == new_username:
-            #         # Username already exists
-            #         print("This username already exists. Please try a different one.")
-            #         user_already_exists = True
-            #         break
-            #     else:
-            #         # Matching username not found
-            #         user_already_exists = False
-
         # If user inputs unique username, proceed to setting password
         # Getting + Checking password
         while (pass_match == False) and (user_already_exists == False):
@@ -307,9 +310,7 @@ while login_successful == True:
                 # Passwords don't match
                 print("Passwords do not match. Please try again.")
                 pass_match = False
-        
-        
-        
+                
         # Storing new user details in text file
         try:
             with open("user.txt", "r+", encoding="utf-8") as file:
@@ -322,19 +323,7 @@ while login_successful == True:
 
     # ADDING NEW TASK
     elif menu == 'a':
-        # TODO: Implement the following functionality
-        '''This code block will allow a user to add a new task to task.txt file
-        - You can use these steps:
-            - Prompt a user for the following: 
-                - the username of the person whom the task is assigned to,
-                - the title of the task,
-                - the description of the task, and 
-                - the due date of the task.
-            - Then, get the current date.
-            - Add the data to the file task.txt
-            - Remember to include 'No' to indicate that the task is not
-              complete.
-        '''
+
         print("\nCREATING A NEW TASK:\n")
         # Username, Title, Description, Date_assigned, Due_date, Completed
         user = input("Enter username to whom task is assigned: ")
@@ -433,32 +422,89 @@ while login_successful == True:
             print("Error writing new task to file.")
 
     elif menu == 'va':
-        # TODO: Implement the following functionality
-        '''This code block will read the task from task.txt file and
-         print to the console in the format of Output 2 presented in the PDF
-         You can do it in this way:
-            - Read a line from the file.
-            - Split that line where there is comma and space.
-            - Then print the results in the format shown in the Output 2 in
-              the PDF
-            - It is much easier to read a file using a for loop.'''
-        pass  # Remove this once you implement the functionality
+
+        task_list = []
+        task_list = read_tasks()
+        table_data = []
+        
+        
+        for task in range(len(task_list)):
+            # Username, Title, Description, Date_assigned, Due_date, Completed
+            task_object = task_list[task]
+            user = task_object.get_user()
+            
+            title = task_object.get_title()
+            title = textwrap.wrap(title, width=20)
+            title_str = ""
+            for wrap in range(len(title)):
+                title_str = title_str + title[wrap] + "\n"
+            
+            
+            description = task_object.get_description()
+            description = textwrap.wrap(description, width=20)
+            desc_str = ""
+            for wraps in range(len(description)):
+                desc_str = desc_str + description[wraps] + "\n"
+                wraps += 1
+            
+            date_assigned = task_object.get_date_assigned()
+            due_date = task_object.get_due_date()
+            completed = task_object.get_completed()
+            
+            table_data.append([(task + 1), user, title_str, desc_str, date_assigned, due_date, completed])
+            task +=1
+        
+        
+        table_headers = ["Task\nno.", "Username of user\nassigned to task", "Task Title", "Task Description", "Date Assigned", "Due Date", "Has task been\nCompleted?"]
+        table = tabulate(table_data, headers=table_headers, tablefmt="grid", maxcolwidths=[None, 10])
+        print("\n------ ALL TASK DETAILS ------\n")
+        print(table)
 
     elif menu == 'vm':
-        # TODO: Implement the following functionality
-        '''This code block will read the task from task.txt file and
-         print to the console in the format of Output 2 presented in the PDF
-         You can do it in this way:
-            - Read a line from the file
-            - Split the line where there is comma and space.
-            - Check if the username of the person logged in is the same as the 
-              username you have read from the file.
-            - If they are the same you print the task in the format of Output 2
-              shown in the PDF '''
-        pass  # Remove this once you implement the functionality
+    
+        task_list = []
+        task_list = read_tasks()
+        table_data = []
+        
+        
+        for task in range(len(task_list)):
+            # Username, Title, Description, Date_assigned, Due_date, Completed
+            task_object = task_list[task]
+            user = task_object.get_user()
+            if user == user_logged_in:
+                title = task_object.get_title()
+                title = textwrap.wrap(title, width=20)
+                title_str = ""
+                for wrap in range(len(title)):
+                    title_str = title_str + title[wrap] + "\n"
+                
+                
+                description = task_object.get_description()
+                description = textwrap.wrap(description, width=20)
+                desc_str = ""
+                for wraps in range(len(description)):
+                    desc_str = desc_str + description[wraps] + "\n"
+                    wraps += 1
+                
+                date_assigned = task_object.get_date_assigned()
+                due_date = task_object.get_due_date()
+                completed = task_object.get_completed()
+                
+                table_data.append([user, title_str, desc_str, date_assigned, due_date, completed])
+            else:
+                pass
+            task +=1
+            
+        if len(table_data) < 1:
+            print("\nYou currently have no tasks.")
+        elif len(table_data) >= 1:
+            table_headers = ["Username of user\nassigned to task", "Task Title", "Task Description", "Date Assigned", "Due Date", "Has task been\nCompleted?"]
+            table = tabulate(table_data, headers=table_headers, tablefmt="grid", maxcolwidths=[None, 10])
+            print("\n------ MY TASK DETAILS ------\n")
+            print(table)
 
     elif menu == 'e':
-        print('Goodbye!!!')
+        print("\nGoodbye!\n")
         login_successful == False
         exit()
 
