@@ -3,3 +3,4 @@ admin, Assign initial tasks, Use task_manager.py to assign each team member with
 lillia, Code task manager, Complete relevant code so task_manager.py runs properly, 03 Apr 2026, 15 Aug 2026, No
 lillia, Research, Research how to manage tasks, 22 May 2026, 15 Jul 2026, No
 bob, Get coffee, Get coffee for all team members, 07 Jan 2023, 07 Jan 2023, No
+harvey, Compile documents, Compile and organise relevant documents for project, 27 Apr 2026, 20 Dec 2026, No

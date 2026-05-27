@@ -3,3 +3,4 @@ lillia, mypassword
 bob, bobspassword
 tom, tomspassword
 taylorswift, t@yl0rsw1ft
+harvey, harveyspassword
